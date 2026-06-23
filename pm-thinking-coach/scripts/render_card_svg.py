@@ -6,6 +6,7 @@ from __future__ import annotations
 import argparse
 import html
 import json
+import re
 import textwrap
 from pathlib import Path
 from typing import Any
@@ -18,10 +19,27 @@ LINE = "#d8deea"
 PAPER = "#fbfaf5"
 ACCENT = "#b98236"
 SOFT = "#f3efe4"
+FOOTER_TEXT = "完整链接请见正文资料入口 | 产品表现 + 市场需求 = 产品价值"
 
 
 def clean(text: Any) -> str:
     return " ".join(str(text or "").split())
+
+
+def token_width(token: str) -> float:
+    width = 0.0
+    for ch in token:
+        if "\u4e00" <= ch <= "\u9fff":
+            width += 1.0
+        elif ch.isspace():
+            width += 0.35
+        else:
+            width += 0.55
+    return width
+
+
+def mixed_tokens(text: str) -> list[str]:
+    return re.findall(r"[A-Za-z0-9_./+-]+|\s+|[^A-Za-z0-9_./+-]", text)
 
 
 def wrap(text: Any, width: int, max_lines: int | None = None) -> list[str]:
@@ -29,17 +47,30 @@ def wrap(text: Any, width: int, max_lines: int | None = None) -> list[str]:
     if not text:
         return []
     has_cjk = any("\u4e00" <= ch <= "\u9fff" for ch in text)
-    if has_cjk:
-        lines = [text[i : i + width] for i in range(0, len(text), width)]
-    else:
+    if not has_cjk:
         lines = textwrap.wrap(text, width=width)
+    else:
+        lines: list[str] = []
+        current = ""
+        current_width = 0.0
+        for token in mixed_tokens(text):
+            w = token_width(token)
+            if current and current_width + w > width:
+                lines.append(current.strip())
+                current = token
+                current_width = w
+            else:
+                current += token
+                current_width += w
+        if current.strip():
+            lines.append(current.strip())
     if max_lines and len(lines) > max_lines:
         lines = lines[:max_lines]
         lines[-1] = lines[-1].rstrip("。,.，；;：: ") + "..."
     return lines
 
 
-def tspan_lines(lines: list[str], x: int, y: int, size: int, fill: str = INK, weight: str = "400", line_height: float = 1.42) -> str:
+def text_lines(lines: list[str], x: int, y: int, size: int, fill: str = INK, weight: str = "400", line_height: float = 1.42) -> str:
     step = int(size * line_height)
     return "\n".join(
         f'<text x="{x}" y="{y + idx * step}" font-size="{size}" font-weight="{weight}" fill="{fill}">{html.escape(line)}</text>'
@@ -55,8 +86,13 @@ def divider(y: int) -> str:
     return f'<line x1="72" y1="{y}" x2="1008" y2="{y}" stroke="{LINE}" stroke-width="2"/>'
 
 
-def normalize_entries(payload: dict, key: str, fallback: list[dict]) -> list[dict]:
-    value = payload.get(key, fallback)
+def normalize_sources(payload: dict) -> list[dict]:
+    fallback = [
+        {"label": "OpenAI", "note": "官方发布"},
+        {"label": "Anthropic", "note": "产品与工程博客"},
+        {"label": "PM analysis", "note": "实践者视角"},
+    ]
+    value = payload.get("sources", fallback)
     out = []
     for item in value[:4]:
         if isinstance(item, dict):
@@ -68,12 +104,11 @@ def normalize_entries(payload: dict, key: str, fallback: list[dict]) -> list[dic
 
 def render_sources(sources: list[dict]) -> str:
     svg = [label(72, 430, "资料入口")]
-    x_positions = [72, 306, 540, 774]
     for idx, source in enumerate(sources[:4]):
-        x = x_positions[idx]
+        x = 72 + idx * 234
         svg.append(f'<rect x="{x}" y="456" width="204" height="118" rx="8" fill="{SOFT}" stroke="{LINE}"/>')
-        svg.append(tspan_lines(wrap(source["label"], 10, 1), x + 18, 495, 24, INK, "700"))
-        svg.append(tspan_lines(wrap(source["note"], 12, 2), x + 18, 532, 21, MUTED))
+        svg.append(text_lines(wrap(source["label"], 10, 1), x + 18, 495, 24, INK, "700"))
+        svg.append(text_lines(wrap(source["note"], 12, 2), x + 18, 532, 21, MUTED))
     return "\n".join(svg)
 
 
@@ -89,7 +124,7 @@ def render_logic(logic: dict) -> str:
         x = 72 + idx * 312
         svg.append(f'<rect x="{x}" y="{y}" width="288" height="196" rx="8" fill="#ffffff" stroke="{LINE}"/>')
         svg.append(f'<text x="{x + 20}" y="{y + 42}" font-size="25" font-weight="700" fill="{INK}">{title}</text>')
-        svg.append(tspan_lines(wrap(body, 13, 4), x + 20, y + 84, 22, MUTED, line_height=1.38))
+        svg.append(text_lines(wrap(body, 13, 4), x + 20, y + 84, 22, MUTED, line_height=1.38))
     return "\n".join(svg)
 
 
@@ -99,8 +134,17 @@ def render_list(title: str, items: list, x: int, y: int, width_chars: int, max_i
     for idx, item in enumerate(items[:max_items], 1):
         lines = wrap(item, width_chars, 2)
         svg.append(f'<text x="{x}" y="{current_y}" font-size="{item_size}" font-weight="700" fill="{ACCENT}">{idx}.</text>')
-        svg.append(tspan_lines(lines, x + 34, current_y, item_size, INK, line_height=1.36))
+        svg.append(text_lines(lines, x + 34, current_y, item_size, INK, line_height=1.36))
         current_y += 34 * max(1, len(lines)) + 18
+    return "\n".join(svg)
+
+
+def render_prompts(prompts: list) -> str:
+    svg = [f'<rect x="72" y="1190" width="936" height="134" rx="10" fill="{SOFT}" stroke="{LINE}"/>', label(102, 1230, "给自己的追问")]
+    for idx, prompt in enumerate(prompts[:3], 1):
+        x = 102 + (idx - 1) * 302
+        svg.append(f'<text x="{x}" y="1284" font-size="24" font-weight="700" fill="{ACCENT}">{idx}.</text>')
+        svg.append(text_lines(wrap(prompt, 12, 2), x + 34, 1284, 23, INK, line_height=1.35))
     return "\n".join(svg)
 
 
@@ -108,7 +152,7 @@ def render(payload: dict) -> str:
     title = clean(payload.get("title", "今日产品思考"))[:18]
     subtitle = clean(payload.get("subtitle", "Product Thinking Card"))[:42]
     question = payload.get("question", "")
-    sources = normalize_entries(payload, "sources", [{"label": "OpenAI", "note": "官方发布"}, {"label": "Anthropic", "note": "产品与工程博客"}, {"label": "PM分析", "note": "实践者视角"}])
+    sources = normalize_sources(payload)
     logic = payload.get("logic", {}) if isinstance(payload.get("logic", {}), dict) else {}
     insights = payload.get("insights") or [payload.get("insight", "从用户行为、市场需求和商业闭环判断产品价值。")]
     prompts = payload.get("prompts", [])
@@ -123,15 +167,14 @@ def render(payload: dict) -> str:
   <text x="72" y="212" font-size="24" fill="{MUTED}">{html.escape(subtitle)}</text>
   {divider(250)}
   {label(72, 300, "核心问题")}
-  {tspan_lines(wrap(question, 24, 3), 72, 355, 43, INK, "800", 1.34)}
-  {divider(602)}
+  {text_lines(wrap(question, 25, 3), 72, 355, 43, INK, "800", 1.34)}
   {render_sources(sources)}
+  {divider(602)}
   {render_logic(logic)}
   {divider(910)}
   {render_list("关键洞察", insights, 72, 966, 30, 3, 25)}
-  <rect x="72" y="1188" width="936" height="148" rx="10" fill="{SOFT}" stroke="{LINE}"/>
-  {render_list("给自己的追问", prompts, 102, 1230, 29, 3, 24)}
-  <text x="72" y="1372" font-size="20" fill="{MUTED}">完整链接请见正文资料入口｜产品表现 + 市场需求 = 产品价值</text>
+  {render_prompts(prompts)}
+  <text x="72" y="1372" font-size="20" fill="{MUTED}">{html.escape(FOOTER_TEXT)}</text>
 </svg>
 '''
 

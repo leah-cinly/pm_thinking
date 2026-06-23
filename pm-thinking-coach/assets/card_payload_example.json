@@ -3,10 +3,22 @@
   "subtitle": "OpenAI / Anthropic / 产品实践",
   "question": "为什么用户愿意把关键工作流交给一个 AI Agent？",
   "sources": [
-    {"label": "OpenAI Codex", "note": "官方说明代理式编程场景"},
-    {"label": "Anthropic MCP", "note": "连接工具与上下文的协议"},
-    {"label": "Claude Code", "note": "开发者工作流中的代理实践"},
-    {"label": "人人都是产品经理", "note": "中文产品拆解与需求视角"}
+    {
+      "label": "OpenAI Codex",
+      "note": "官方说明代理式编程场景"
+    },
+    {
+      "label": "Anthropic MCP",
+      "note": "连接工具与上下文的协议"
+    },
+    {
+      "label": "Claude Code",
+      "note": "开发者工作流中的代理实践"
+    },
+    {
+      "label": "人人都是产品经理",
+      "note": "中文产品拆解与需求视角"
+    }
   ],
   "logic": {
     "performance": "不只自动执行任务，还要让计划、进度、失败原因可见。",
