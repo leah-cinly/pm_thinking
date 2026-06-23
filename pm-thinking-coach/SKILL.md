@@ -1,6 +1,6 @@
 ---
 name: pm-thinking-coach
-description: Product thinking coach for daily PM training, product design critique, product strategy analysis, market/user/competitor research, decision-quality reflection, and poster/card generation. Use when the user wants daily product questions, analysis of a product/company/industry, structured PM interview or promotion thinking, personal product judgment training, or visually polished minimalist thinking cards with cited sources.
+description: Product thinking coach for daily PM training, product design critique, product strategy analysis, market/user/competitor research, decision-quality reflection, and interactive HTML output. Use when the user wants daily product questions, analysis of a product/company/industry, structured PM interview or promotion thinking, personal product judgment training, or a beautiful Little-Prince-inspired interactive HTML page with clickable sources, rich PM judgment, insights, and savable reflection answers.
 ---
 
 # PM Thinking Coach
@@ -20,7 +20,7 @@ Use this skill in three modes:
 
 1. **Daily push**: Generate worthwhile product design and strategy questions.
 2. **Research-backed coaching**: Search for product background, cite links, synthesize insights, then guide the user to think.
-3. **Card output**: Turn sources, product logic, insights, and reflection prompts into a clean visual card.
+3. **Interactive HTML output**: Turn sources, product logic, insights, and reflection prompts into a beautiful interactive HTML page.
 
 ## Required Source Behavior
 
@@ -93,22 +93,21 @@ When the user brings a product, feature, company, or industry question:
 
 Read `references/thinking-frameworks.md` when using decision, behavior, influence, scarcity, or critical-thinking frameworks.
 
-## Card Workflow
+## HTML Output Workflow
 
-When asked to make a poster, card, or visual summary:
+When asked to make a poster, card, visual summary, or interactive thinking page:
 
-1. Build the full answer first: sources with links, source facts, product judgment, insights, and reflection questions.
-2. Condense the card into a detailed but readable information card:
-   - Title: 6-14 Chinese characters or 3-7 English words.
-   - Core question: one sentence.
-   - Source entries: 3-4 short source labels plus why each matters. Put full links in the accompanying answer.
-   - Product logic: three compact sections for product performance, market demand, and product value.
-   - Insight: 2-3 non-obvious observations.
-   - Reflection prompts: 3 questions that guide the user's personal thinking.
-3. Use `references/poster-style.md` for visual direction.
-4. Prefer minimalist editorial layout: clear grid, generous margins, restrained colors, no busy illustration, no overlapping decoration.
-5. If deterministic output is enough, run `scripts/render_card_svg.py` with a JSON payload to generate an SVG card.
-6. If a bitmap illustration is requested and an image generation capability is available, use subtle original background art only after the text layout is safe.
+1. Build the full answer first: clickable sources with links, source facts, product judgment, insights, and reflection questions.
+2. Prefer HTML output over static images. Use `scripts/render_thinking_html.py` with a JSON payload to generate a self-contained HTML page.
+3. Make the HTML information-rich:
+   - Source entries: label, source type, URL, and why it matters.
+   - Facts: 3-6 grounded background facts from research.
+   - Product judgment: concrete bullets for product performance, market demand, and product value; include scenarios, user path, metrics, competitor/substitute logic, commercialization, and moat.
+   - Insights: 3-5 detailed observations with evidence and practical product action.
+   - Reflection prompts: 3 questions with textarea answer windows.
+4. Ensure the answer windows can save to browser localStorage and export JSON.
+5. Use `references/poster-style.md` for visual direction: Little-Prince-inspired but original, romantic, polished, and readable, with planets, stars, rose, orbit lines, and spacious panels.
+6. Keep SVG output as a lightweight fallback only when the user explicitly asks for a static card.
 
 ## Output Shape
 
@@ -130,8 +129,8 @@ Product performance / Market demand / Product value.
 **给你的思考题**
 3-6 questions.
 
-**小卡片文案**
-Title, question, sources, product logic, insights, prompts.
+**HTML 页面内容**
+Title, question, clickable sources, facts, product logic, insights, reflection prompts, answer-saving behavior.
 ```
 
 Keep the tone exacting but encouraging. Push the user toward clearer causal reasoning, sharper tradeoff judgment, and evidence-backed product intuition.

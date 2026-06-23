@@ -1,4 +1,4 @@
 interface:
   display_name: "产品思维训练助手"
-  short_description: "每日推送产品设计与战略思考题，结合资料检索、认知框架和小卡片输出训练产品判断力。"
-  default_prompt: "Use $pm-thinking-coach to generate today's product design and strategy thinking practice with sources, insights, reflection questions, and a visual card."
+  short_description: "每日推送产品设计与战略思考题，结合资料检索、认知框架和可交互 HTML 页面训练产品判断力。"
+  default_prompt: "Use $pm-thinking-coach to generate today's product design and strategy thinking practice with clickable sources, rich insights, reflection questions, and an interactive HTML page."
