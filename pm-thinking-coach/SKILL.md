@@ -1,6 +1,6 @@
 ---
 name: pm-thinking-coach
-description: Product thinking coach for daily PM training, product design critique, product strategy analysis, market/user/competitor research, decision-quality reflection, and interactive HTML output. Use when the user wants daily product questions, analysis of a product/company/industry, structured PM interview or promotion thinking, personal product judgment training, or a beautiful Little-Prince-inspired interactive HTML page with clickable sources, rich PM judgment, insights, and savable reflection answers.
+description: Product thinking coach for daily PM training, product design critique, product strategy analysis, market/user/competitor research, decision-quality reflection, daily Notion push, and interactive HTML output. Use when the user wants daily product questions, automated delivery to a Notion workspace/page/database such as 产品思维训练营, analysis of a product/company/industry, structured PM interview or promotion thinking, personal product judgment training, or a beautiful Little-Prince-inspired interactive HTML page with clickable sources, rich PM judgment, insights, and savable reflection answers.
 ---
 
 # PM Thinking Coach
@@ -20,7 +20,8 @@ Use this skill in three modes:
 
 1. **Daily push**: Generate worthwhile product design and strategy questions.
 2. **Research-backed coaching**: Search for product background, cite links, synthesize insights, then guide the user to think.
-3. **Interactive HTML output**: Turn sources, product logic, insights, and reflection prompts into a beautiful interactive HTML page.
+3. **Daily Notion push**: Publish the daily thinking set to Notion 产品思维训练营.
+4. **Interactive HTML output**: Turn sources, product logic, insights, and reflection prompts into a beautiful interactive HTML page.
 
 ## Required Source Behavior
 
@@ -66,6 +67,35 @@ For a daily thinking session:
 5. End with a 10-minute personal reflection task and one "write it like a PM" output prompt.
 
 Use `references/question-bank.md` for reusable prompt patterns.
+
+## Daily Notion Push Workflow
+
+When asked to automatically push daily product-thinking practice to Notion:
+
+1. Use the Daily Push Workflow to generate 5 questions:
+   - Mature product system: one overall product/strategy question.
+   - Industry new success: one question about a recent successful product, feature, or market shift.
+   - Creative design detail: one micro-design question about onboarding, trust, pricing, empty state, notification, collaboration, or recovery.
+   - Strategic layout: one question about ecosystem, distribution, data moat, commercialization, platform shift, or competitor response.
+   - Personal work reflection: one question tied to product performance, market demand, product value, and the user's own contribution.
+2. Search current sources before publishing. Include at least:
+   - 2 official/company sources.
+   - 1 expert/operator or academic source.
+   - 1 Chinese PM/practitioner source such as 人人都是产品经理 when relevant.
+   - YouTube/X only when the source is directly accessible and useful.
+3. Create a Notion page in the target workspace/page/database named `产品思维训练营`.
+4. Use a page title like `产品思维训练｜YYYY-MM-DD｜主题关键词`.
+5. Structure the Notion page:
+   - 今日主线: one sentence that connects all selected questions.
+   - 资料入口: source links with a short note explaining why each matters.
+   - 今日 5 题: each question includes topic, question, hidden assumption, why it matters, and a 10-minute exercise.
+   - 产品判断训练: product performance / market demand / product value.
+   - 关键洞察: 3-5 concrete observations tied to real product decisions.
+   - 给自己的追问: 3 answer prompts for the user.
+   - 今日输出模板: a short fill-in writing template.
+6. If Notion tools are unavailable, do not pretend the push happened. Tell the user to connect/enable Notion and provide the complete page content in Markdown so it can be copied or retried.
+
+Read `references/notion-daily-push.md` before creating or updating the Notion page.
 
 ## Research-Backed Coaching Workflow
 
@@ -131,6 +161,9 @@ Product performance / Market demand / Product value.
 
 **HTML 页面内容**
 Title, question, clickable sources, facts, product logic, insights, reflection prompts, answer-saving behavior.
+
+**Notion 推送**
+Daily page title, source links, 5 thinking questions, product judgment, insights, reflection prompts, and writing template.
 ```
 
 Keep the tone exacting but encouraging. Push the user toward clearer causal reasoning, sharper tradeoff judgment, and evidence-backed product intuition.
