@@ -46,6 +46,51 @@ def fact_list(facts: list[str]) -> str:
     return "\n".join(f"<li>{esc(item)}</li>" for item in facts)
 
 
+def theme_cards(themes: list[dict]) -> str:
+    cards = []
+    for idx, item in enumerate(themes, 1):
+        title = esc(item.get("title", f"主题 {idx}"))
+        why = esc(item.get("why", ""))
+        training = esc(item.get("training_value", ""))
+        cards.append(f'''
+        <article class="theme-card">
+          <span class="theme-index">Theme {idx}</span>
+          <h3>{title}</h3>
+          {f'<p><b>为什么入选：</b>{why}</p>' if why else ''}
+          {f'<p><b>训练价值：</b>{training}</p>' if training else ''}
+        </article>''')
+    return "\n".join(cards)
+
+
+def question_cards(questions: list[dict]) -> str:
+    cards = []
+    for idx, item in enumerate(questions, 1):
+        qtype = esc(item.get("type", "深度产品问题"))
+        topic = esc(item.get("topic", ""))
+        source = esc(item.get("source", ""))
+        question = esc(item.get("question", ""))
+        assumption = esc(item.get("assumption", ""))
+        performance = esc(item.get("performance", item.get("judgment", "")))
+        demand = esc(item.get("demand", ""))
+        value = esc(item.get("value", ""))
+        exercise = esc(item.get("exercise", ""))
+        cards.append(f'''
+        <article class="question-card">
+          <div class="question-type">{qtype}</div>
+          <h3>{topic}</h3>
+          {f'<p class="support"><b>资料入口：</b>{source}</p>' if source else ''}
+          <p class="question-line">{question}</p>
+          <div class="question-meta">
+            <p><b>隐藏假设</b><span>{assumption}</span></p>
+            <p><b>产品表现</b><span>{performance}</span></p>
+            <p><b>市场需求</b><span>{demand}</span></p>
+            <p><b>产品价值</b><span>{value}</span></p>
+            <p><b>10 分钟练习</b><span>{exercise}</span></p>
+          </div>
+        </article>''')
+    return "\n".join(cards)
+
+
 def judgment_column(title: str, subtitle: str, items: list[str]) -> str:
     bullets = "\n".join(f"<li>{esc(item)}</li>" for item in items)
     return f'''
@@ -98,6 +143,8 @@ def render(payload: dict) -> str:
     sources = as_list(payload.get("sources"))
     facts = as_list(payload.get("facts"))
     logic = payload.get("logic", {}) if isinstance(payload.get("logic"), dict) else {}
+    themes = as_list(payload.get("themes"))
+    questions = as_list(payload.get("questions"))
     insights = as_list(payload.get("insights"))
     prompts = as_list(payload.get("prompts"))
     writing_template = esc(payload.get("writing_template", "我观察到... 我判断... 关键证据是... 下一步验证..."))
@@ -200,7 +247,7 @@ def render(payload: dict) -> str:
       .planet {{ right: 42px; top: auto; bottom: 32px; width: 170px; height: 170px; }}
       .orbit {{ right: 0; top: auto; bottom: 90px; }}
       .rose {{ right: 250px; bottom: 34px; }}
-      .source-grid, .judgment-grid, .facts {{ grid-template-columns: 1fr; }}
+      .source-grid, .judgment-grid, .facts, .theme-grid, .question-meta {{ grid-template-columns: 1fr; }}
     }}
   </style>
 </head>
@@ -224,6 +271,16 @@ def render(payload: dict) -> str:
       <section>
         <div class="section-head"><h2>事实速写</h2><span class="hint">先看资料事实，再做产品推理</span></div>
         <ul class="facts">{fact_list(facts)}</ul>
+      </section>
+
+      <section>
+        <div class="section-head"><h2>主题过滤</h2><span class="hint">从 6-10 条资料收敛到 1-2 个值得训练的产品主题</span></div>
+        <div class="theme-grid">{theme_cards(themes)}</div>
+      </section>
+
+      <section>
+        <div class="section-head"><h2>今日深度产品问题</h2><span class="hint">聚焦一个值得深入思考的问题，覆盖产品表现、市场需求与产品价值</span></div>
+        <div class="question-list">{question_cards(questions)}</div>
       </section>
 
       <section>
