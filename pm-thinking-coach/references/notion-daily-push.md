@@ -9,47 +9,40 @@ Use this reference when publishing daily AI-frontier product-thinking practice t
 - If multiple matches exist, choose the most recently edited training/workspace page or ask the user.
 - If Notion tools are unavailable, provide the complete Markdown page content and explicitly say the push was not completed.
 
+## Core Collaboration Logic
+
+Notion is the storage and collaboration surface for:
+
+- AI frontier material
+- frontier summaries
+- selected product themes
+- one deep product question
+- product-question analysis
+- key insights
+- personal reflection prompts
+- HTML page link
+
+The second function is not mere storage. It should build a richer, structured product analysis around the chosen question and include source links so the user can backtrack and read.
+
+The third function is reflection guidance, plus a beautiful HTML page that visualizes the daily question, insight reference, and reflection prompts. The HTML link should also be written into the Notion daily page.
+
 ## Daily Pipeline
 
-1. **Run at 9:00 daily** through Codex automation.
-2. **Collect 6-10 AI frontier sources** with links.
-3. **Filter into 1-2 product themes** worth thinking about.
-4. **Generate 1 deep product question**. Do not force five categories. Use mature product, new successful product, creative design detail, strategic layout, and personal reflection only as optional lenses.
-5. **For the question**, include source entries, hidden assumption, product performance angles, market demand angles, product value angles, and a 10-minute exercise.
-6. **Generate optional HTML** using `scripts/render_thinking_html.py` for a beautiful interactive page.
-7. **Write the Notion page** in `产品思维训练营`.
-8. **User answers in Notion**.
-9. **Weekly review** evaluates answer quality and product judgment progress.
-
-## Source Collection Rules
-
-Collect 6-10 sources across these buckets:
-
-- Official AI/product sources: OpenAI, Anthropic, Google DeepMind, Meta AI, Microsoft AI, GitHub, product docs, release notes, engineering blogs.
-- Research/model sources: official papers, labs, technical reports, benchmark discussions from primary sources.
-- Operator/expert sources: credible product leaders, AI founders, researchers, YC/a16z/Lenny/Stratechery-style analysis.
-- Chinese PM/practitioner sources: 人人都是产品经理 and similar product-analysis sources when relevant.
-- Social/video sources: X or YouTube only when directly accessible and useful; use as weak signals, not proof.
-
-For every source, record:
-
-- Source label
-- URL
-- Type: official / research / expert / practitioner / social-video
-- Date if visible
-- One sentence: why this matters for product thinking
-
-## Theme Filter
-
-Filter the sources into 1-2 themes using this scorecard:
-
-- Product impact: changes user behavior, workflow entry, pricing, trust, distribution, or moat.
-- Freshness: new release, new capability, new adoption signal, or newly important market shift.
-- Learnability: can produce judgment questions, not just trivia.
-- Evidence quality: has official or credible sources.
-- Breadth: can connect mature product systems, new products, design details, strategy, and personal reflection.
-
-Do not select more than 2 themes. The value is focus.
+1. Run at 9:00 daily through Codex automation.
+2. Collect 6-10 AI frontier sources with links.
+3. For each source, include:
+   - label
+   - type
+   - date when visible
+   - short summary
+   - why it matters for PMs
+4. Filter the sources into 1-2 product themes.
+5. Generate one deep product design or strategy question.
+6. Build a structured product analysis for that question.
+7. Generate an HTML page and include its path/link.
+8. Write the daily page into Notion.
+9. Let the user answer in Notion.
+10. Run weekly review on the accumulated answers.
 
 ## Daily Page Structure
 
@@ -59,18 +52,24 @@ Use this structure for every daily page:
 # 产品思维训练｜YYYY-MM-DD｜主题关键词
 
 ## 今日主线
-One sentence connecting today's 1-2 selected themes.
+One sentence connecting today's selected theme and question.
 
 ## AI 前沿资料入口（6-10 条）
-- [Source label](url)｜type｜date if visible：why it matters.
+- [Source label](url)｜type｜date：why it matters.
+
+## 前沿资料总结
+- What changed?
+- Why now?
+- Why product managers should care?
 
 ## 主题过滤
 ### 主题 1：Theme name
-- 为什么入选：product impact / freshness / learnability / evidence.
-- 对产品人的训练价值：what kind of judgment it exercises.
+- 为什么入选：
+- 对产品人的训练价值：
 
 ### 主题 2：Theme name, optional
-same structure
+- 为什么入选：
+- 对产品人的训练价值：
 
 ## 今日深度产品问题
 - 关联主题：
@@ -79,17 +78,13 @@ same structure
 - 主问题：
 - 隐藏假设：
 - 为什么值得思考：
-- 产品表现思考角度：场景 / 用户路径 / 功能表现 / 指标 / OKR 贡献 / 设计细节
-- 市场需求思考角度：目标用户 / 真实需求 / 竞品或替代方案 / 时机 / 需求证据
-- 产品价值思考角度：用户价值 / 平台价值 / 商业化 / 长期壁垒
 - 10 分钟练习：
-- 可选延展：成熟产品 / 新成功产品 / 创意细节 / 战略布局 / 个人复盘
 
-## 产品判断训练
+## 产品问题分析
 ### 产品表现
-- Scenario / user path / metric / OKR contribution.
+- Scenario / user path / design details / metrics / OKR contribution.
 ### 市场需求
-- Target user / real need / competitor or substitute / timing.
+- Target users / real need / substitutes / competitor behavior / timing / demand proof.
 ### 产品价值
 - User value / platform value / commercialization / moat.
 
@@ -101,6 +96,9 @@ same structure
 2. Question
 3. Question
 
+## HTML 页面链接
+- Local deliverable path or shareable output reference.
+
 ## 今日输出模板
 我观察到：...
 我判断核心问题是：...
@@ -109,16 +107,16 @@ same structure
 下一步验证：...
 ```
 
-## HTML Payload Shape
+## Notion Styling Rules
 
-Use these fields when creating a local interactive HTML page:
+Even when created through text blocks, the page should feel modular and readable:
 
-- `sources`: 6-10 source objects with `kind`, `label`, `note`, `url`.
-- `themes`: 1-2 theme objects with `title`, `why`, `training_value`.
-- `questions`: 1 primary question object, or a small list when useful, with `type`, `topic`, `source`, `question`, `assumption`, `performance`, `demand`, `value`, `exercise`.
-- `logic`: product performance / demand / value bullets.
-- `insights`: each with title, detail, evidence, action.
-- `prompts`: answer prompts for the user.
+- Use clear H1/H2/H3 hierarchy.
+- Keep section titles consistent.
+- Group source links separately from source summaries.
+- Keep the question and product analysis visually distinct.
+- Make the HTML link a dedicated section near the bottom.
+- Prefer short, high-density sections over long wall-of-text paragraphs.
 
 ## Weekly Review Structure
 
@@ -129,7 +127,7 @@ Create one weekly Notion review page after reading the last 7 daily pages and us
 
 ## 本周输入概览
 - Themes covered:
-- Strongest sources:
+- Strongest frontier signals:
 - Most repeated product pattern:
 
 ## 回答质量评估
@@ -160,9 +158,10 @@ A rewritten model answer based on one of the user's answers.
 
 ## Quality Bar
 
-- The daily question should force judgment, tradeoff, and evidence, not recall. One excellent deep question is better than five shallow questions.
-- Product judgment must be concrete enough that the user can write a PM-style answer.
+- The daily question should force judgment, tradeoff, and evidence, not recall.
+- Product analysis should be structured, not slogan-like.
 - Use source links with dates when available.
 - Separate source facts from inference.
 - Do not cite inaccessible social posts as evidence.
-- Do not overwhelm the user with too many themes; keep daily focus to 1-2 themes.
+- Keep daily focus to 1-2 themes.
+- Always include the HTML page reference in the Notion page.

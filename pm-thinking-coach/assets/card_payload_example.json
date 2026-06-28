@@ -1,56 +1,74 @@
 {
-  "title": "AI Agent每日训练",
-  "subtitle": "6-10 条 AI 前沿资料 → 1-2 个产品主题 → 1 个深度产品问题",
+  "title": "AI 前沿产品思维训练",
+  "subtitle": "Notion 负责沉淀前沿资料与产品问题分析，HTML 负责把问题、洞察和引导做成一页完整作品。",
   "date": "Daily 09:00 Practice",
-  "question": "当 AI Agent 从工具变成工作流入口，产品经理应该如何判断它的真实产品价值？",
+  "question": "当 AI Agent 从功能变成工作流入口，产品经理该如何判断这是真需求、真价值，还是短期热度？",
+  "html_link": "outputs/pm-thinking-coach/2026-06-28-thinking-page.html",
   "sources": [
     {
       "kind": "官方",
       "label": "OpenAI Codex",
       "note": "代理式编程与任务委托入口",
-      "url": "https://openai.com/index/introducing-codex/"
+      "url": "https://openai.com/index/introducing-codex/",
+      "summary": "把 AI 从回答问题推进到直接接手开发任务，强调执行、审查与上下文理解。"
     },
     {
       "kind": "官方",
       "label": "Anthropic MCP",
       "note": "工具、数据源与上下文连接协议",
-      "url": "https://www.anthropic.com/news/model-context-protocol"
+      "url": "https://www.anthropic.com/news/model-context-protocol",
+      "summary": "说明未来 Agent 竞争不仅是模型能力，还包括如何连接真实系统与工作流。"
     },
     {
       "kind": "官方",
       "label": "Claude Code",
       "note": "开发者工作流中的代理实践",
-      "url": "https://www.anthropic.com/claude-code"
+      "url": "https://www.anthropic.com/claude-code",
+      "summary": "展示可审查、可回滚、可接管的开发体验，暴露信任机制的重要性。"
     },
     {
       "kind": "官方",
       "label": "Google DeepMind",
       "note": "AI 研究与产品能力前沿",
-      "url": "https://deepmind.google/blog/"
+      "url": "https://deepmind.google/blog/",
+      "summary": "提供能力前沿和长期技术方向，是判断平台级变化的重要入口。"
     },
     {
       "kind": "官方",
       "label": "Meta AI",
       "note": "开源模型与生态策略信号",
-      "url": "https://ai.meta.com/blog/"
+      "url": "https://ai.meta.com/blog/",
+      "summary": "帮助判断开源路线如何影响工具生态、分发与壁垒。"
     },
     {
       "kind": "社区",
       "label": "人人都是产品经理",
       "note": "中文产品拆解与用户需求视角",
-      "url": "https://www.woshipm.com/"
+      "url": "https://www.woshipm.com/",
+      "summary": "用中文 PM 语境补足用户、竞品和商业化的分析视角。"
     }
   ],
-  "facts": [
-    "AI 产品正在从“回答问题”转向“接手任务”，用户开始把连续、多步骤、有上下文的工作流交给 Agent。",
-    "工具协议、代码执行、浏览器操作和企业权限体系，让 Agent 更接近真实业务流程，而不只是聊天界面。",
-    "开发者与知识工作者场景对可解释、可回滚、可审查和权限边界高度敏感，是观察 Agent 信任机制的好样本。",
-    "不同厂商正在争夺工作流入口：模型能力、工具连接、数据上下文和生态分发共同决定产品壁垒。"
+  "source_summaries": [
+    {
+      "title": "AI 正在争夺“工作流入口”",
+      "body": "前沿资料共同指向一个变化：模型不再满足于回答，而是开始接手跨步骤任务。产品的竞争焦点从能力展示转向入口控制、上下文沉淀和信任机制。",
+      "why": "这直接影响产品经理如何判断一个 AI 功能到底只是亮点，还是已经变成平台入口。"
+    },
+    {
+      "title": "连接能力正在决定产品可用性",
+      "body": "从 MCP 到开发者工具链，资料反复强调连接外部工具、系统和数据的重要性。没有连接，Agent 很难进入真实业务。",
+      "why": "这提醒我们，产品价值不只看模型强不强，还要看是否嵌入真实任务链路。"
+    },
+    {
+      "title": "信任设计比炫技更重要",
+      "body": "开发者场景的资料显示，用户更在意审查、回滚、权限、失败解释，而不是“像人一样自主”本身。",
+      "why": "这是产品设计问题，也是战略问题，因为它决定复用率、商业化和壁垒。"
+    }
   ],
   "themes": [
     {
       "title": "Agent 作为工作流入口",
-      "why": "它改变用户从“自己操作工具”到“委托目标并验收结果”的行为路径，影响入口、权限、信任和商业化。",
+      "why": "它改变用户从“自己操作工具”到“委托目标并验收结果”的路径，影响入口、权限、信任与商业化。",
       "training_value": "训练你判断一个 AI 能力什么时候只是功能，什么时候已经变成产品入口。"
     },
     {
@@ -66,7 +84,8 @@
       "source": "OpenAI Codex、Anthropic MCP、Claude Code、Google DeepMind、Meta AI、人人都是产品经理",
       "question": "当 AI Agent 能接手连续、多步骤、有上下文的任务时，产品经理应如何判断它是在提升产品表现、满足真实市场需求，还是只是在制造短期新鲜感？",
       "assumption": "用户愿意把关键工作流交给 Agent，不是因为它“更像人”，而是因为它降低了判断下一步的成本，并且在失败时仍可控。",
-      "performance": "思考场景、用户路径、权限授权、执行过程、失败补救、指标变化：用户是否真的减少了跨工具切换和重复判断？",
+      "why": "这个问题同时连接成熟产品系统、新成功产品、创意设计细节与战略布局，能逼近真正的产品判断。",
+      "performance": "思考场景、用户路径、权限授权、执行过程、失败补救、设计细节与指标变化：用户是否真的减少了跨工具切换和重复判断？",
       "demand": "思考目标用户、真实痛点、竞品/替代方案、采用时机、需求证据：用户为什么现在愿意切换或付费？",
       "value": "思考用户价值、平台价值、商业化和长期壁垒：Agent 是否沉淀上下文、习惯、数据连接和工作流入口？",
       "exercise": "用 10 分钟写出一个你熟悉的产品场景：用户原路径是什么，Agent 介入后哪一步变化最大，哪个指标最先证明价值。"
