@@ -1,0 +1,859 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>产品思维训练｜2026-09-21｜工作流入口与信任机制</title>
+  <style>
+    :root {
+      --ink: #1f2947;
+      --ink-soft: #40506f;
+      --muted: #6e768c;
+      --paper: #faf2e4;
+      --panel: rgba(255, 251, 245, 0.88);
+      --line: rgba(188, 161, 124, 0.30);
+      --gold: #d6a652;
+      --rose: #c86167;
+      --night: #2b3f6f;
+      --teal: #6c9389;
+      --shadow: 0 26px 72px rgba(34, 39, 62, 0.15);
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      color: var(--ink);
+      font-family: Georgia, "Times New Roman", "Noto Serif SC", "Songti SC", serif;
+      background:
+        radial-gradient(circle at 14% 14%, rgba(255, 225, 174, 0.54), transparent 18rem),
+        radial-gradient(circle at 88% 12%, rgba(43, 63, 111, 0.18), transparent 22rem),
+        linear-gradient(180deg, #fdf6e8 0%, #f7ecd9 52%, #f5e7d3 100%);
+      min-height: 100vh;
+    }
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background-image: radial-gradient(rgba(255,255,255,0.16) 1px, transparent 1px);
+      background-size: 18px 18px;
+      opacity: .16;
+      mix-blend-mode: multiply;
+    }
+    .page {
+      width: min(1220px, calc(100% - 36px));
+      margin: 0 auto;
+      padding: 36px 0 68px;
+      position: relative;
+    }
+    .stars {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      overflow: hidden;
+    }
+    .stars i {
+      position: absolute;
+      width: 4px;
+      height: 4px;
+      border-radius: 50%;
+      background: var(--gold);
+      opacity: .8;
+      box-shadow: 0 0 10px rgba(214,166,82,.34);
+    }
+    .stars i:nth-child(1) { left: 8%; top: 12%; }
+    .stars i:nth-child(2) { left: 21%; top: 8%; }
+    .stars i:nth-child(3) { left: 84%; top: 14%; }
+    .stars i:nth-child(4) { left: 91%; top: 30%; }
+    .stars i:nth-child(5) { left: 16%; top: 79%; }
+    .stars i:nth-child(6) { left: 66%; top: 84%; }
+    header {
+      position: relative;
+      padding: 54px 410px 54px 52px;
+      border: 1px solid var(--line);
+      border-radius: 34px;
+      background: linear-gradient(180deg, rgba(255,252,247,.94), rgba(250,243,233,.88));
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+    .hero-wash {
+      position: absolute;
+      inset: auto -80px -120px auto;
+      width: 420px;
+      height: 420px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(108,147,137,.17), transparent 62%);
+    }
+    .planet {
+      position: absolute;
+      right: 86px;
+      top: 56px;
+      width: 238px;
+      height: 238px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 35% 32%, #334d83 0%, var(--night) 62%, #203056 100%);
+      box-shadow: inset -30px -20px 0 rgba(0,0,0,.10);
+    }
+    .planet::before, .planet::after {
+      content: "";
+      position: absolute;
+      border-radius: 50%;
+      background: #f5cf7e;
+    }
+    .planet::before { width: 18px; height: 18px; left: 68px; top: 86px; }
+    .planet::after { width: 8px; height: 8px; right: 58px; top: 110px; }
+    .orbit {
+      position: absolute;
+      right: 6px;
+      top: 166px;
+      width: 384px;
+      height: 94px;
+      border-top: 2px solid rgba(108,147,137,.5);
+      transform: rotate(-8deg);
+      border-radius: 50%;
+    }
+    .rose {
+      position: absolute;
+      right: 306px;
+      bottom: 48px;
+      width: 62px;
+      height: 104px;
+    }
+    .rose::before {
+      content: "";
+      position: absolute;
+      left: 18px;
+      top: 0;
+      width: 28px;
+      height: 28px;
+      background: var(--rose);
+      border-radius: 62% 38% 55% 45%;
+      box-shadow: -11px 9px 0 #da7a7f, 11px 9px 0 #b64950;
+    }
+    .rose::after {
+      content: "";
+      position: absolute;
+      left: 31px;
+      top: 33px;
+      width: 2px;
+      height: 71px;
+      background: var(--teal);
+      box-shadow: -17px 22px 0 -1px var(--teal), 16px 34px 0 -1px var(--teal);
+    }
+    .kicker {
+      color: var(--rose);
+      font-weight: 700;
+      letter-spacing: .12em;
+      font-size: 13px;
+      text-transform: uppercase;
+    }
+    h1 {
+      margin: 18px 0 14px;
+      font-size: clamp(38px, 4.8vw, 68px);
+      line-height: 1.05;
+      letter-spacing: 0;
+      font-weight: 700;
+    }
+    .question {
+      margin: 0;
+      color: var(--ink-soft);
+      font-size: clamp(22px, 2.9vw, 33px);
+      line-height: 1.5;
+      font-weight: 600;
+      max-width: 12em;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 22px;
+      margin-top: 24px;
+    }
+    section {
+      border: 1px solid var(--line);
+      border-radius: 26px;
+      background: linear-gradient(180deg, rgba(255,252,246,.93), rgba(252,246,236,.86));
+      box-shadow: 0 16px 38px rgba(34,39,62,.08);
+      padding: 28px;
+      position: relative;
+      overflow: hidden;
+    }
+    section::after {
+      content: "";
+      position: absolute;
+      right: -80px;
+      top: -80px;
+      width: 180px;
+      height: 180px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(214,166,82,.08), transparent 70%);
+    }
+    .section-head {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 18px;
+      position: relative;
+      z-index: 1;
+    }
+    h2 {
+      margin: 0;
+      font-size: 27px;
+      font-weight: 700;
+    }
+    .hint {
+      color: var(--muted);
+      font-size: 14px;
+      max-width: 28rem;
+      text-align: right;
+      line-height: 1.6;
+    }
+    .source-grid,
+    .summary-grid,
+    .judgment-grid {
+      display: grid;
+      gap: 16px;
+      position: relative;
+      z-index: 1;
+    }
+    .source-grid,
+    .summary-grid,
+    .judgment-grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+    .theme-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px;
+    }
+    .source-card,
+    .summary-card,
+    .theme-card,
+    .question-card,
+    .judgment-card,
+    .insight-card,
+    .prompt-block {
+      position: relative;
+      z-index: 1;
+    }
+    .source-card {
+      display: flex;
+      min-height: 216px;
+      flex-direction: column;
+      gap: 10px;
+      padding: 20px;
+      border-radius: 20px;
+      text-decoration: none;
+      color: var(--ink);
+      background: rgba(255, 248, 236, 0.96);
+      border: 1px solid rgba(214, 184, 133, 0.42);
+      transition: transform .18s ease, box-shadow .18s ease;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.6);
+    }
+    .source-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 16px 30px rgba(34,39,62,.12);
+    }
+    .source-top {
+      display: grid;
+      gap: 10px;
+    }
+    .source-chip-row {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    .source-kind,
+    .source-date,
+    .summary-kicker,
+    .theme-index,
+    .question-type {
+      display: inline-flex;
+      width: fit-content;
+      border-radius: 999px;
+      padding: 5px 10px;
+      font-weight: 700;
+      font-size: 12px;
+      letter-spacing: .06em;
+    }
+    .source-kind {
+      background: var(--night);
+      color: #fff;
+    }
+    .source-date {
+      background: rgba(107,118,140,.12);
+      color: var(--ink-soft);
+    }
+    .summary-kicker,
+    .theme-index,
+    .question-type {
+      background: rgba(200,97,103,.12);
+      color: var(--rose);
+      text-transform: uppercase;
+    }
+    .source-card strong,
+    .summary-card h3,
+    .theme-card h3,
+    .question-card h3,
+    .judgment-card h3,
+    .insight-card h3 {
+      font-size: 22px;
+      line-height: 1.4;
+      margin: 0;
+    }
+    .source-note {
+      color: var(--ink-soft);
+      line-height: 1.65;
+      font-weight: 600;
+    }
+    .source-summary,
+    .summary-card p,
+    .theme-card p,
+    .question-card p,
+    .insight-card p,
+    .judgment-card li {
+      color: var(--ink-soft);
+      line-height: 1.75;
+      margin: 0;
+    }
+    .summary-card,
+    .theme-card,
+    .question-card,
+    .judgment-card {
+      padding: 22px;
+      border-radius: 20px;
+      background: rgba(255,255,255,.72);
+      border: 1px solid rgba(214, 184, 133, 0.32);
+    }
+    .summary-card h3,
+    .theme-card h3,
+    .question-card h3,
+    .judgment-card h3 {
+      margin: 14px 0 10px;
+    }
+    .hero-question {
+      background: linear-gradient(180deg, rgba(255,250,240,.94), rgba(255,244,228,.88));
+    }
+    .question-heading {
+      display: grid;
+      gap: 8px;
+    }
+    .question-line {
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--ink) !important;
+      line-height: 1.8 !important;
+      margin: 14px 0;
+    }
+    .question-why {
+      font-size: 16px;
+      margin-bottom: 0;
+    }
+    .question-meta {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+      margin-top: 16px;
+    }
+    .question-meta p {
+      margin: 0;
+      padding: 15px 16px;
+      border-radius: 16px;
+      background: rgba(255, 248, 236, 0.92);
+      border: 1px solid rgba(214, 184, 133, 0.42);
+      display: grid;
+      gap: 8px;
+    }
+    .question-meta b {
+      color: var(--rose);
+    }
+    .question-meta-wide {
+      grid-column: 1 / -1;
+    }
+    .eyebrow {
+      margin: 0 0 10px;
+      color: var(--rose);
+      font-weight: 700;
+      font-size: 13px;
+      letter-spacing: .05em;
+    }
+    .judgment-card ul {
+      margin: 0;
+      padding-left: 18px;
+    }
+    .insight-list,
+    .reflection-grid {
+      display: grid;
+      gap: 16px;
+    }
+    .insight-card {
+      display: grid;
+      grid-template-columns: 46px 1fr;
+      gap: 18px;
+      padding: 22px;
+      border: 1px solid rgba(214, 184, 133, 0.32);
+      border-radius: 20px;
+      background: rgba(255,255,255,.74);
+    }
+    .insight-index {
+      width: 46px;
+      height: 46px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      background: var(--gold);
+      color: #fff;
+      font-weight: 700;
+    }
+    .support {
+      color: var(--muted) !important;
+      font-size: 15px;
+    }
+    .prompt-block {
+      display: grid;
+      gap: 12px;
+      padding: 20px;
+      border-radius: 20px;
+      background: rgba(255, 248, 236, 0.92);
+      border: 1px solid rgba(214, 184, 133, 0.42);
+    }
+    .prompt-title {
+      font-size: 18px;
+      font-weight: 700;
+      line-height: 1.6;
+    }
+    .prompt-hint {
+      color: var(--muted);
+      line-height: 1.65;
+    }
+    textarea {
+      width: 100%;
+      min-height: 132px;
+      resize: vertical;
+      border: 1px solid rgba(188, 161, 124, 0.36);
+      border-radius: 16px;
+      padding: 16px 18px;
+      font: inherit;
+      line-height: 1.7;
+      color: var(--ink);
+      background: rgba(255,255,255,.9);
+    }
+    textarea:focus {
+      outline: 3px solid rgba(214,166,82,.22);
+      border-color: var(--gold);
+    }
+    .template {
+      margin-top: 16px;
+      padding: 18px;
+      border-radius: 16px;
+      background: rgba(108,147,137,0.12);
+      color: #385655;
+      line-height: 1.75;
+    }
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      align-items: center;
+      margin-top: 16px;
+    }
+    button {
+      border: 0;
+      border-radius: 999px;
+      padding: 12px 18px;
+      font-weight: 700;
+      color: #fff;
+      background: var(--night);
+      cursor: pointer;
+      font-family: inherit;
+    }
+    button.secondary {
+      background: var(--rose);
+    }
+    .save-state {
+      color: var(--muted);
+    }
+    @media (max-width: 980px) {
+      header {
+        padding: 36px 30px 280px;
+      }
+      .planet {
+        right: 42px;
+        top: auto;
+        bottom: 36px;
+        width: 184px;
+        height: 184px;
+      }
+      .orbit {
+        right: -10px;
+        top: auto;
+        bottom: 86px;
+        width: 300px;
+      }
+      .rose {
+        right: 238px;
+        bottom: 38px;
+      }
+      .source-grid,
+      .summary-grid,
+      .theme-grid,
+      .judgment-grid,
+      .question-meta {
+        grid-template-columns: 1fr;
+      }
+      .question-meta-wide {
+        grid-column: auto;
+      }
+      .section-head {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      .hint {
+        text-align: left;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="stars"><i></i><i></i><i></i><i></i><i></i><i></i></div>
+  <main class="page">
+    <header>
+      <div class="hero-wash"></div>
+      <div class="orbit"></div>
+      <div class="planet"></div>
+      <div class="rose"></div>
+      <div class="kicker">2026-09-21 · PM Thinking Coach</div>
+      <h1>产品思维训练｜2026-09-21｜工作流入口与信任机制</h1>
+      <p class="question">当 AI Agent 从聊天功能变成真实工作流入口时，产品经理如何判断它是否形成了可持续的产品价值，而不是一次短期能力展示？</p>
+    </header>
+
+    <div class="grid">
+      <section>
+        <div class="section-head"><h2>AI 前沿资料入口</h2><span class="hint">保留链接，也保留为什么值得关注。</span></div>
+        <div class="source-grid">
+        <a class="source-card" href="https://openai.com/index/reimagining-advertising-with-ai/" target="_blank" rel="noreferrer">
+          <div class="source-top">
+            <div class="source-chip-row">
+              <span class="source-kind">官方产品</span>
+              <span class="source-date">2026-09-16</span>
+            </div>
+            <strong>OpenAI｜Reimagining advertising with AI</strong>
+          </div>
+          <span class="source-note">Sponsored Agents 将广告点击后的探索与转化变成可追问的对话入口。</span>
+          <p class="source-summary">OpenAI 开始测试带有清晰标识的 Sponsored Agents，并把 HubSpot、Shopify 等业务工具接入 ChatGPT Ads。</p>
+        </a>
+
+        <a class="source-card" href="https://blog.google/innovation-and-ai/models-and-research/google-labs/cc-expanding-to-groups/" target="_blank" rel="noreferrer">
+          <div class="source-top">
+            <div class="source-chip-row">
+              <span class="source-kind">官方产品</span>
+              <span class="source-date">2026-09-17</span>
+            </div>
+            <strong>Google Labs｜The new CC, an AI agent built for families</strong>
+          </div>
+          <span class="source-note">家庭事务协同说明 Agent 可以从个人问答进入多人共享的日常流程。</span>
+          <p class="source-summary">CC 面向家庭管理日历、任务和事务，并展示谁要做什么、Agent 已完成什么。</p>
+        </a>
+
+        <a class="source-card" href="https://blogs.microsoft.com/blog/2026/09/17/what-weve-learned-from-microsofts-own-ai-transformation/" target="_blank" rel="noreferrer">
+          <div class="source-top">
+            <div class="source-chip-row">
+              <span class="source-kind">官方案例</span>
+              <span class="source-date">2026-09-17</span>
+            </div>
+            <strong>Microsoft｜What we’ve learned from Microsoft’s own AI transformation</strong>
+          </div>
+          <span class="source-note">微软把价值衡量从 AI 使用率转向业务结果与端到端工作流。</span>
+          <p class="source-summary">微软披露，围绕具体业务结果重设计工作流后，部分场景的优先用例采用率、收入和周期时间出现改善。</p>
+        </a>
+
+        <a class="source-card" href="https://www.anthropic.com/news/accenture-embedded-evaluation" target="_blank" rel="noreferrer">
+          <div class="source-top">
+            <div class="source-chip-row">
+              <span class="source-kind">官方安全</span>
+              <span class="source-date">2026-09-18</span>
+            </div>
+            <strong>Anthropic｜Partnering with Accenture on embedded evaluation</strong>
+          </div>
+          <span class="source-note">独立评估与红队开始被嵌入前沿模型公司的日常研发与部署流程。</span>
+          <p class="source-summary">Anthropic 与 Accenture 合作开展模型评估、红队测试和对齐评估，强调企业真实使用场景的反馈。</p>
+        </a>
+
+        <a class="source-card" href="https://www.anthropic.com/news/life-sciences-verification-program" target="_blank" rel="noreferrer">
+          <div class="source-top">
+            <div class="source-chip-row">
+              <span class="source-kind">官方安全</span>
+              <span class="source-date">2026-09-17</span>
+            </div>
+            <strong>Anthropic｜Introducing the Life Sciences Verification Program</strong>
+          </div>
+          <span class="source-note">高风险行业的能力开放以身份、资质、安全标准和伦理审查为前置条件。</span>
+          <p class="source-summary">生命科学验证计划为经过核验的团队提供更适合科研的模型访问，并区分 Standard Use 与 High-risk Use。</p>
+        </a>
+
+        <a class="source-card" href="https://www.anthropic.com/research/claude-uplifts-biomolecular-modeling" target="_blank" rel="noreferrer">
+          <div class="source-top">
+            <div class="source-chip-row">
+              <span class="source-kind">官方研究</span>
+              <span class="source-date">2026-09-17</span>
+            </div>
+            <strong>Anthropic｜How Claude is uplifting biomolecular modeling</strong>
+          </div>
+          <span class="source-note">Agent 不只是生成内容，也可以在专业工具链中跨多个步骤优化真实研究流程。</span>
+          <p class="source-summary">Anthropic 介绍 Claude 在不到四周内优化 30 多个生物分子模型，并通过工具链降低运行成本与内存门槛。</p>
+        </a>
+
+        <a class="source-card" href="https://www.anthropic.com/webinars/enterprise-readiness-a-cisos-guide-to-deploying-claude" target="_blank" rel="noreferrer">
+          <div class="source-top">
+            <div class="source-chip-row">
+              <span class="source-kind">官方实践</span>
+              <span class="source-date">2026-09-18</span>
+            </div>
+            <strong>Anthropic｜Enterprise Readiness: A CISO&#x27;s Guide to Deploying Claude</strong>
+          </div>
+          <span class="source-note">企业从聊天走向 Agent，需要部署模式、身份权限、数据治理、审计日志和管理策略共同成立。</span>
+          <p class="source-summary">Anthropic 将企业级 Agent 落地拆成部署模型、控制族群、数据触达和从聊天到 Claude Code 的可见性问题。</p>
+        </a>
+
+        <a class="source-card" href="https://academy.openai.com/public/clubs/government/videos/ai-for-procurement-professionals-september-15-2026-replay" target="_blank" rel="noreferrer">
+          <div class="source-top">
+            <div class="source-chip-row">
+              <span class="source-kind">官方教育</span>
+              <span class="source-date">2026-09-16</span>
+            </div>
+            <strong>OpenAI Academy｜AI for Procurement Professionals</strong>
+          </div>
+          <span class="source-note">采购场景把速度提升与合规、判断质量放在同一个产品承诺里。</span>
+          <p class="source-summary">OpenAI Academy 回放聚焦 AI 如何支持采购工作、强化决策并在不牺牲合规的前提下提升效率。</p>
+        </a></div>
+      </section>
+
+      <section>
+        <div class="section-head"><h2>前沿资料总结</h2><span class="hint">把“发生了什么”和“为什么重要”拆开讲清楚。</span></div>
+        <div class="summary-grid">
+        <article class="summary-card">
+          <span class="summary-kicker">Summary 1</span>
+          <h3>资料组 A：Agent 正在从回答器变成工作流入口</h3>
+          <p>OpenAI 的 Sponsored Agents、Google 的家庭 Agent 和 Microsoft 的企业工作流案例共同说明，产品竞争的重点开始从“模型能回答什么”转向“用户愿不愿意把下一步交给它”。关键变化包括对话后续动作、多人协同、业务系统连接、任务执行和结果反馈。</p>
+          <p class="support"><b>为什么重要：</b>对产品经理来说，真正值得观察的不是 Agent 是否更像人，而是它是否缩短了用户从意图到结果的路径，并改变了原有入口、分工和指标。</p>
+        </article>
+
+        <article class="summary-card">
+          <span class="summary-kicker">Summary 2</span>
+          <h3>资料组 B：信任、验证与可控性正在变成产品入口</h3>
+          <p>Anthropic 的嵌入式评估、生命科学验证计划、企业安全部署内容，以及 OpenAI Academy 的采购场景，都把权限、审核、审计、人工接管和行业资质放进产品设计本身。高风险场景的激活，不再只是开通功能，而是先证明谁可以用、能做什么、出了问题谁负责。</p>
+          <p class="support"><b>为什么重要：</b>这意味着信任机制不只是上线前的合规工作，它会直接决定产品能否进入更高价值、更长链路、更高客单价的场景。</p>
+        </article></div>
+      </section>
+
+      <section>
+        <div class="section-head"><h2>主题过滤</h2><span class="hint">从信号里收敛到真正值得想的问题。</span></div>
+        <div class="theme-grid">
+        <article class="theme-card">
+          <span class="theme-index">Theme 1</span>
+          <h3>Agent 作为工作流入口</h3>
+          <p><b>为什么入选：</b>本周多条官方资料都从单点问答走向任务委托、系统连接、多人协同和端到端流程。</p>
+          <p><b>训练价值：</b>训练判断入口迁移、用户路径缩短、任务边界和真实业务指标，而不是只看模型能力演示。</p>
+        </article>
+
+        <article class="theme-card">
+          <span class="theme-index">Theme 2</span>
+          <h3>信任机制成为产品能力</h3>
+          <p><b>为什么入选：</b>企业与高风险行业的 Agent 采用，越来越依赖验证、权限、审计、人工接管和评估机制。</p>
+          <p><b>训练价值：</b>训练把抽象的安全与治理要求翻译成激活门槛、使用边界、指标和商业价值。</p>
+        </article></div>
+      </section>
+
+      <section>
+        <div class="section-head"><h2>今日深度产品问题</h2><span class="hint">一题走深，兼顾设计、战略、成熟产品与新成功产品视角。</span></div>
+        
+        <article class="question-card hero-question">
+          <div class="question-heading">
+            <span class="question-type">本周深度产品问题</span>
+            <h3>AI Agent 何时真正成为产品入口？</h3>
+          </div>
+          <p class="support"><b>资料入口：</b>2026-09-15 至 2026-09-21 的官方 AI 产品、安全与企业实践资料</p>
+          <p class="question-line">如果你负责一个已经拥有聊天入口的 AI 产品，你会如何判断：是继续优化回答质量，还是让 Agent 进入更长的真实工作流？请用产品表现、市场需求和产品价值三个维度，给出一次明确取舍。</p>
+          <p class="question-why"><b>为什么值得思考：</b>本周资料同时出现了入口迁移和信任前置两个信号，最适合训练 PM 识别“能力升级”何时变成“行为迁移”。</p>
+          <div class="question-meta">
+            <p><b>隐藏假设</b><span>用户愿意把下一步行动交给 Agent 的前提，不只是能力更强，而是收益足够大、失败代价可控、责任边界足够清晰。</span></p>
+            <p><b>产品表现</b><span>画出一个具体任务的现有路径与 Agent 路径，标出授权、执行、审查、人工接管、失败恢复和结果反馈；提出一个领先指标与一个滞后指标。</span></p>
+            <p><b>市场需求</b><span>锁定最先愿意迁移的用户群，说明他们当前用什么替代方案、为什么现在切换、哪些风险会让他们继续保留人工或旧工具。</span></p>
+            <p><b>产品价值</b><span>解释用户价值、平台价值、商业化价值和长期壁垒分别从哪里来，并指出哪一个价值需要先被验证。</span></p>
+            <p class="question-meta-wide"><b>10 分钟练习</b><span>用 10 分钟写一页 PM 判断：我会把 Agent 推进到哪个流程节点；我放弃什么；我用什么证据决定继续、收缩或停止。</span></p>
+          </div>
+        </article>
+      </section>
+
+      <section>
+        <div class="section-head"><h2>产品问题分析</h2><span class="hint">产品表现 + 市场需求 = 产品价值</span></div>
+        <div class="judgment-grid">
+          
+      <article class="judgment-card">
+        <p class="eyebrow">场景 / 路径 / 设计 / 指标</p>
+        <h3>产品表现</h3>
+        <ul><li>先看场景是否真的从“提问”变成“委托”：用户是否授权 Agent 获取上下文、调用工具并完成下一步动作。</li>
+<li>拆开路径指标：首次委托率、再次委托率、任务完成率、人工接管率、返工率、失败恢复时间。</li>
+<li>把信任机制放进核心流程：权限范围、预览与确认、审计记录、回滚和责任归属，而不是只放在设置页。</li>
+<li>把指标连到业务结果：微软案例提醒产品经理，使用率不是终点，周期时间、收入、关闭率或决策质量才是结果。</li></ul>
+      </article>
+          
+      <article class="judgment-card">
+        <p class="eyebrow">用户 / 竞品 / 时机 / 证据</p>
+        <h3>市场需求</h3>
+        <ul><li>优先选择错误代价高、流程重复、上下文复杂且当前替代方案摩擦大的用户群。</li>
+<li>真实需求不是“大家都想要 Agent”，而是用户愿意为更快、更稳或更可审计的结果改变原有工作路径。</li>
+<li>竞品不只包括另一个模型，也包括人工团队、旧系统、表格、搜索、外包和“什么都不自动化”的保守选项。</li>
+<li>需求验证要看行为承诺：用户是否愿意连接数据、配置权限、接受审核、持续复用，而不只是试用一次。</li></ul>
+      </article>
+          
+      <article class="judgment-card">
+        <p class="eyebrow">用户 / 平台 / 商业 / 壁垒</p>
+        <h3>产品价值</h3>
+        <ul><li>用户价值来自更短的意图到结果路径，以及更少的协调、检索、等待和返工。</li>
+<li>平台价值来自新的任务入口、更多上下文沉淀、跨工具连接和更强的组织级使用频率。</li>
+<li>商业价值来自更高价值场景的进入资格：企业席位、行业方案、交易转化、专业服务或按结果收费。</li>
+<li>长期壁垒更可能来自工作流数据、权限与治理资产、组织习惯和可复用的评估体系，而不是单次模型效果。</li></ul>
+      </article>
+        </div>
+      </section>
+
+      <section>
+        <div class="section-head"><h2>关键洞察</h2><span class="hint">把前沿变化翻译成能落到真实产品动作的判断。</span></div>
+        <div class="insight-list">
+        <article class="insight-card">
+          <div class="insight-index">1</div>
+          <div>
+            <h3>Agent 的关键跃迁不是“会做更多”，而是“被允许做下一步”</h3>
+            <p>从 Sponsored Agents、家庭事务协同到企业工作流案例，真正改变产品入口的是 Agent 获得了上下文、工具和行动权限。回答质量只是前置条件，行为迁移发生在用户愿意把下一步交出去之后。</p>
+            <p class="support"><b>依据：</b>来源事实来自 OpenAI、Google Labs 和 Microsoft 的官方产品与实践资料；“入口迁移”是基于这些事实的产品推断。</p>
+            <p class="support"><b>联系实际：</b>做产品分析时，先画用户原路径和 Agent 路径，明确多出来的权限、少掉的摩擦和新增的责任。</p>
+          </div>
+        </article>
+
+        <article class="insight-card">
+          <div class="insight-index">2</div>
+          <div>
+            <h3>高价值场景的第一性约束是责任边界</h3>
+            <p>生命科学验证计划、企业安全部署和嵌入式评估共同说明，越接近高风险决策，越不能只靠“模型更聪明”获得采用。验证资格、权限、审计和人工接管会成为产品体验的一部分。</p>
+            <p class="support"><b>依据：</b>来源事实来自 Anthropic 的验证、评估与企业部署资料；“责任边界决定进入资格”是产品推断。</p>
+            <p class="support"><b>联系实际：</b>在评估一个 Agent 产品时，除了问准确率，还要问谁能用、能做什么、哪里必须确认、出错后如何追责与恢复。</p>
+          </div>
+        </article>
+
+        <article class="insight-card">
+          <div class="insight-index">3</div>
+          <div>
+            <h3>采用率只有在连接业务结果后才有意义</h3>
+            <p>Microsoft 的案例把 AI 采用从“有没有使用”转向“是否改变业务结果”。这提醒 PM：Agent 的北极星指标不应停留在调用次数，而要落到周期时间、决策质量、收入、转化或返工率。</p>
+            <p class="support"><b>依据：</b>微软官方文章披露了围绕业务结果重设计工作流的案例数据；指标选择与因果解释需要产品团队进一步验证。</p>
+            <p class="support"><b>联系实际：</b>每提出一个 Agent 方案，至少同时写出一个行为指标、一个结果指标和一个反指标，防止用活跃度掩盖低价值自动化。</p>
+          </div>
+        </article>
+
+        <article class="insight-card">
+          <div class="insight-index">4</div>
+          <div>
+            <h3>信任不是上线前的检查项，而是商业化的扩张杠杆</h3>
+            <p>当产品能以验证、权限、审计和评估机制进入采购、生命科学、金融或企业协作流程时，信任会从成本项变成进入更高价值市场的资格证明。</p>
+            <p class="support"><b>依据：</b>这是对 Anthropic 与 OpenAI 本周资料的综合产品推断，不等同于来源原文的直接结论。</p>
+            <p class="support"><b>联系实际：</b>把信任机制拆成可设计、可测量、可销售的产品模块，而不是只由安全或法务在最后阶段补齐。</p>
+          </div>
+        </article></div>
+      </section>
+
+      <section>
+        <div class="section-head"><h2>给自己的追问</h2><span class="hint">先做自己的判断，再回看参考答案，训练价值更高。</span></div>
+        <div class="reflection-grid">
+        <label class="prompt-block">
+          <span class="prompt-title">1. 你会把 Agent 放进哪个具体流程节点？为什么是这个节点，而不是更早或更晚？</span>
+          <span class="prompt-hint">写清楚用户当前的替代方案、任务频率、错误代价和迁移动机。</span>
+          <textarea data-question="你会把 Agent 放进哪个具体流程节点？为什么是这个节点，而不是更早或更晚？" placeholder="写下你的判断、证据、反证和下一步验证。"></textarea>
+        </label>
+
+        <label class="prompt-block">
+          <span class="prompt-title">2. 如果产品只能先做一个信任机制，你会选权限控制、人工确认、审计日志还是回滚？</span>
+          <span class="prompt-hint">说明它解决的是哪类风险，以及你会用什么指标验证它没有制造新的摩擦。</span>
+          <textarea data-question="如果产品只能先做一个信任机制，你会选权限控制、人工确认、审计日志还是回滚？" placeholder="写下你的判断、证据、反证和下一步验证。"></textarea>
+        </label>
+
+        <label class="prompt-block">
+          <span class="prompt-title">3. 什么证据会让你放弃“Agent 正在成为新入口”的判断？</span>
+          <span class="prompt-hint">至少写一个反例、一个反指标和一个你愿意改变判断的时间点。</span>
+          <textarea data-question="什么证据会让你放弃“Agent 正在成为新入口”的判断？" placeholder="写下你的判断、证据、反证和下一步验证。"></textarea>
+        </label></div>
+        <div class="template"><b>写作模板：</b>我观察到：[本周发生了什么]；我判断核心变化是：[用户路径或战略约束]；我选择把 Agent 放在：[具体流程节点]；关键证据是：[发布、行为、数据或竞品信号]；我的产品假设是：[如果做 X，Y 会改善，因为 Z]；我放弃的是：[明确取舍]；下周验证：[下一步追踪的信号]。</div>
+        <div class="actions">
+          <button id="saveBtn">保存回答</button>
+          <button id="exportBtn" class="secondary">导出 JSON</button>
+          <span id="saveState" class="save-state">尚未保存</span>
+        </div>
+      </section>
+
+    </div>
+  </main>
+  <script>
+    const storageKey = 'pm-thinking-coach:' + document.title;
+    const textareas = Array.from(document.querySelectorAll('textarea'));
+
+    function collectAnswers() {
+      return textareas.map((el, index) => ({
+        index: index + 1,
+        question: el.dataset.question,
+        answer: el.value.trim()
+      }));
+    }
+
+    function saveAnswers() {
+      const payload = {
+        savedAt: new Date().toISOString(),
+        answers: collectAnswers()
+      };
+      localStorage.setItem(storageKey, JSON.stringify(payload, null, 2));
+      document.getElementById('saveState').textContent = '已保存：' + new Date().toLocaleString();
+    }
+
+    function loadAnswers() {
+      const raw = localStorage.getItem(storageKey);
+      if (!raw) return;
+      try {
+        const data = JSON.parse(raw);
+        (data.answers || []).forEach((item, idx) => {
+          if (textareas[idx]) {
+            textareas[idx].value = item.answer || '';
+          }
+        });
+        if (data.savedAt) {
+          document.getElementById('saveState').textContent = '已恢复：' + new Date(data.savedAt).toLocaleString();
+        }
+      } catch (error) {
+        console.warn(error);
+      }
+    }
+
+    document.getElementById('saveBtn').addEventListener('click', saveAnswers);
+    document.getElementById('exportBtn').addEventListener('click', () => {
+      const blob = new Blob([
+        JSON.stringify({
+          title: document.title,
+          exportedAt: new Date().toISOString(),
+          answers: collectAnswers()
+        }, null, 2)
+      ], { type: 'application/json' });
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(blob);
+      link.download = document.title.replace(/\s+/g, '-') + '-answers.json';
+      link.click();
+      URL.revokeObjectURL(link.href);
+    });
+
+    textareas.forEach((el) => {
+      el.addEventListener('input', () => {
+        document.getElementById('saveState').textContent = '有未保存修改';
+      });
+    });
+
+    loadAnswers();
+  </script>
+</body>
+</html>
