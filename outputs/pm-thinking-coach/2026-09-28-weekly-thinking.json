@@ -1,0 +1,189 @@
+{
+  "title": "产品思维训练｜2026-09-28｜代理工作流与信任",
+  "date": "2026-09-28",
+  "question": "当 AI 从回答问题变成持续调用应用、替用户完成任务时，产品经理应该先把工作流入口做深，还是先把可观测、权限与责任边界做成默认能力？请以一个具体工作流为例，给出自动化边界、人工接管点、失败恢复和上线后的验证指标。",
+  "sources": [
+    {
+      "label": "Microsoft：Introducing the new Copilot with Home, Code and Autopilot",
+      "kind": "official",
+      "date": "2026-09-25",
+      "url": "https://blogs.microsoft.com/blog/2026/09/25/introducing-the-new-copilot-with-home-code-and-autopilot/",
+      "note": "Copilot 把 Chat、Cowork、Code 和持续运行的 Autopilot 放进同一工作入口，代理开始从按钮变成持续工作模式。"
+    },
+    {
+      "label": "Anthropic：Claude Opus 5.5",
+      "kind": "official",
+      "date": "2026-09-22",
+      "url": "https://www.anthropic.com/claude-opus-5-5",
+      "note": "官方称 Opus 5.5 在多数工作上达到 Fable 5.1 水平、运行成本低 40%，成本曲线继续把长任务推向产品化。"
+    },
+    {
+      "label": "Google：A new wave of Connected Apps is rolling out to Gemini",
+      "kind": "official",
+      "date": "2026-09-23",
+      "url": "https://blog.google/innovation-and-ai/products/gemini-app/new-connected-apps-gemini/",
+      "note": "Gemini 新增 Airtable、Linear、monday.com、PandaDoc、Zoho 等连接应用，并支持 @ 提及，把对话直接接到工作流。"
+    },
+    {
+      "label": "Google：Gemini 3.8 Live with Live Avatar",
+      "kind": "official",
+      "date": "2026-09-24",
+      "url": "https://blog.google/innovation-and-ai/models-and-research/gemini-models/gemini-3-8-live-with-live-avatar/",
+      "note": "Live Avatar 将实时视觉、语音与后台异步工具调用结合，并以 SynthID 水印强调可识别与透明使用。"
+    },
+    {
+      "label": "Google：6 ways Android Enterprise is evolving",
+      "kind": "official",
+      "date": "2026-09-23",
+      "url": "https://blog.google/products-and-platforms/products/android-enterprise/whats-new-android-enterprise-2026/",
+      "note": "Android Enterprise 把跨应用、基于屏幕上下文的 AI 自动化与企业级控制放在一起，说明代理入口和治理正在合并设计。"
+    },
+    {
+      "label": "Google：AI Max reporting feature",
+      "kind": "official",
+      "date": "2026-09-23",
+      "url": "https://blog.google/products/ads-commerce/ai-max-language-reporting-features/",
+      "note": "Google Ads 为 AI 驱动的投放增加统一报告，让广告主看到触发词、素材和落地页，强化代理行为的可解释性。"
+    },
+    {
+      "label": "Anthropic：Claude discovers a novel enzyme system",
+      "kind": "research",
+      "date": "2026-09-23",
+      "url": "https://www.anthropic.com/news/claude-discovers-novel-enzyme-system",
+      "note": "Anthropic 公开人类与代理协作做生命科学研究的早期结果，代理价值从回答问题延伸到提出假设、筛选线索和推动实验。"
+    },
+    {
+      "label": "Microsoft：The continued state of global AI diffusion in 2026",
+      "kind": "research",
+      "date": "2026-09-21",
+      "url": "https://blogs.microsoft.com/on-the-issues/2026/09/21/the-continued-state-of-global-ai-diffusion-in-2026/",
+      "note": "微软报告称 2026 年第二季度全球工作年龄人口 AI 使用率达到 18.8%，同时开放权重模型在 API token 使用中的份额持续增长。"
+    },
+    {
+      "label": "Microsoft：Disrupting EvilTokens",
+      "kind": "official",
+      "date": "2026-09-22",
+      "url": "https://blogs.microsoft.com/on-the-issues/2026/09/22/disrupting-eviltokens-the-ai-chatbot-built-for-cybercrime/",
+      "note": "EvilTokens 把邮箱分析、目标选择、冒充话术和欺诈准备包装成订阅服务，提醒产品经理把权限与滥用路径当成核心体验问题。"
+    }
+  ],
+  "source_summaries": [
+    {
+      "title": "事实",
+      "body": "本周资料显示，AI 产品正在把入口从聊天框扩展到跨应用工作流、持续代理、实时多模态交互和领域研究协作；同时，统一报告、企业控制、水印与安全响应开始成为产品的一部分。",
+      "why": "产品竞争的单位从一次回答变成一段可持续运行、可被复核的工作流。"
+    },
+    {
+      "title": "产品推断",
+      "body": "当模型成本下降、可调用工具增多时，新增价值不再只来自能力展示，而来自代理是否能在用户可接受的风险、等待和复核成本内稳定完成任务。",
+      "why": "工作流入口越深，失败的责任、恢复成本和信任损耗就越需要被产品化。"
+    },
+    {
+      "title": "训练任务",
+      "body": "把自动化边界当成一个可分层、可观测、可回退的产品变量，练习判断哪些步骤该交给代理，哪些步骤必须保留人的确认与责任。",
+      "why": "这能把前沿新闻转换为具体的产品取舍、指标和实验。"
+    }
+  ],
+  "themes": [
+    {
+      "title": "代理从功能入口变成持续工作流",
+      "why": "Copilot、Gemini Connected Apps、Android Enterprise 和 Anthropic 的科学研究案例共同显示，AI 正从单点问答进入跨应用、长任务和专业流程。",
+      "training_value": "训练产品经理从“要不要做 AI 功能”转向判断哪个工作流值得被接管、如何设计授权梯度和复用入口。"
+    },
+    {
+      "title": "可观测与治理决定代理能否规模化",
+      "why": "AI Max 的统一报告、Live Avatar 的水印、企业控制与 EvilTokens 事件说明，代理的可见性、边界、审计和滥用防护会直接影响采用与留存。",
+      "training_value": "训练把信任拆成用户路径、责任归属、失败恢复和可量化指标，而不是停留在抽象的安全口号。"
+    }
+  ],
+  "questions": [
+    {
+      "type": "战略与设计",
+      "topic": "工作流入口与默认信任",
+      "source": "https://blogs.microsoft.com/blog/2026/09/25/introducing-the-new-copilot-with-home-code-and-autopilot/；https://blog.google/innovation-and-ai/products/gemini-app/new-connected-apps-gemini/；https://blog.google/products/ads-commerce/ai-max-language-reporting-features/；https://blogs.microsoft.com/on-the-issues/2026/09/22/disrupting-eviltokens-the-ai-chatbot-built-for-cybercrime/",
+      "question": "当 AI 从回答问题变成持续调用应用、替用户完成任务时，产品经理应该先把工作流入口做深，还是先把可观测、权限与责任边界做成默认能力？请以一个具体工作流为例，给出自动化边界、人工接管点、失败恢复和上线后的验证指标。",
+      "assumption": "用户愿意把更多步骤交给代理，但前提是系统能让用户知道代理做了什么、为什么这样做、何时需要接管，以及出错后能否低成本撤销或修正。",
+      "performance": [
+        "场景：选择一个高频、跨应用、结果可检查的工作流，例如销售跟进、研究整理、报表生成、代码修改或客服处理。",
+        "路径：画出触发、理解上下文、调用工具、执行、验证、人工接管、回滚和复盘的完整链路。",
+        "指标：首个任务完成率、有效完成率、人工接管率、返工率、撤销率、端到端耗时、异常暴露时间和高风险错误率。",
+        "OKR：把代理调用量降为过程指标，优先绑定任务成功、节省时间、复用默认设置、留存和责任人满意度。"
+      ],
+      "demand": [
+        "目标用户：区分愿意尝试的专业用户、承担结果责任的管理者，以及只想获得确定结果的普通用户。",
+        "真实需求：判断用户买的是速度、减少上下文切换、降低出错风险，还是把责任转移给系统。",
+        "替代方案：比较人工执行、模板或脚本、Copilot 建议模式、竞品代理和“暂时不自动化”的成本。",
+        "需求证据：观察重复任务频率、现有 workaround、用户主动扩大权限、付费意愿、复用率和对失败恢复的反馈。"
+      ],
+      "value": [
+        "用户价值：减少重复操作与认知切换，同时让用户在关键节点获得可解释、可复核的确定感。",
+        "平台价值：获得更深的工作流入口、更高的复用频率、更丰富的任务反馈和更强的生态连接。",
+        "商业化：思考按任务结果、权限层级、节省时间或团队治理能力收费，避免只奖励更多调用。",
+        "壁垒：任务轨迹、领域数据、可靠评估、权限策略、审计报告和失败恢复共同形成信任复利。"
+      ],
+      "exercise": "用 10 分钟写出：1 个用户愿意授权的步骤；1 个必须人工确认的步骤；1 个最坏失败后果；1 个最小可行实验；1 个会让你收回权限的指标阈值。",
+      "why": "这道题把本周的代理入口、成本下降、跨应用连接、可观测性和安全事件放进同一个决策里，要求你同时处理增长、体验、信任和商业取舍。"
+    }
+  ],
+  "logic": {
+    "performance": [
+      "产品表现不是代理调用次数，而是用户在更少介入下是否完成了更高价值的任务；核心路径应记录理解、计划、执行、验证、接管和回滚。",
+      "默认策略建议从低风险、可逆、结果可检查的步骤开始放权，再根据有效完成率、返工率和用户复用默认设置逐层扩大权限。",
+      "领先指标看首个任务成功率、异常暴露时间和人工接管后的恢复成功率；滞后指标看留存、付费、投诉、复购与高风险错误。"
+    ],
+    "demand": [
+      "最强需求通常来自高频、跨应用、规则相对清晰、结果可验证但人工执行耗时的工作流，而不是所有复杂任务。",
+      "用户的主要阻力往往不是怀疑模型是否聪明，而是不知道出错时谁负责、如何发现错、能否恢复以及是否会造成不可逆损失。",
+      "竞品差异会从“谁先接入代理”转向“谁能让责任人放心扩大授权”，因此可观测性和治理本身就是需求证明的一部分。"
+    ],
+    "value": [
+      "短期用户价值是节省时间与注意力，平台价值是拥有更深的工作流入口，商业价值是从工具订阅走向结果或权限定价。",
+      "代理越深入工作流，越需要把行动轨迹、统一报告、权限控制和回滚能力做成复用基础设施，否则自动化规模越大，风险放大越快。",
+      "长期壁垒不是一个代理按钮，而是领域任务数据、可靠评估、权限策略、生态连接和失败恢复共同形成的信任复利。"
+    ]
+  },
+  "insights": [
+    {
+      "title": "入口上移会放大责任问题",
+      "detail": "当代理从聊天框进入跨应用工作流，用户感知的产品单位不再是回答，而是一次结果交付；错误也从“答得不好”变成可能直接影响业务的行动。",
+      "evidence": "Microsoft Copilot 的 Cowork 与 Autopilot、Google Connected Apps 和 Android Enterprise 都把代理放进连续工作路径。",
+      "action": "先画出代理的行动轨迹和责任交接点，再决定哪些步骤默认自动执行。"
+    },
+    {
+      "title": "可观测性是转化能力，不只是审计能力",
+      "detail": "统一报告、水印和状态反馈的价值不只是满足治理要求，它们还减少用户的猜测成本，让用户更愿意复用代理并扩大授权。",
+      "evidence": "Google Ads 用统一视图解释 AI 驱动的投放路径，Live Avatar 用 SynthID 让内容来源更可识别。",
+      "action": "把可见性指标和采用指标连起来观察，例如复用率、默认设置保留率、人工确认率与撤销率。"
+    },
+    {
+      "title": "代理价值要从调用量切换到结果质量",
+      "detail": "成本下降会削弱单次调用的稀缺性，产品如果继续奖励更多动作，可能得到更高活跃却没有更高有效结果。",
+      "evidence": "Anthropic 宣称 Opus 5.5 运行成本下降 40%，Microsoft 也用工作流周期和人类验证结果来描述 AI 转型成效。",
+      "action": "用有效完成、节省时间、少返工和可复用结果设计计费与绩效，而不是只看调用次数。"
+    },
+    {
+      "title": "安全事件揭示了产品的反向需求",
+      "detail": "EvilTokens 说明同样的上下文理解和自动化能力可以被包装成恶意工作流；越强的入口，越需要在默认设计里加入滥用路径识别和责任边界。",
+      "evidence": "微软披露 EvilTokens 将邮箱分析、目标选择和欺诈准备组合成订阅服务，并在数月内影响大量组织。",
+      "action": "把最坏滥用场景写进产品需求和上线门槛，明确谁能调用、能调用什么、如何发现异常和如何止损。"
+    }
+  ],
+  "prompts": [
+    {
+      "question": "如果只能优先做一个能力，你会选择让代理更快完成任务，还是提高用户对代理行为的可见性？为什么？",
+      "hint": "写出目标用户、被牺牲的体验、一个先行指标、一个反证，以及什么证据会让你改变选择。"
+    },
+    {
+      "question": "在你选的工作流中，哪一步最适合自动化，哪一步必须保留人工接管？",
+      "hint": "用风险、可逆性、结果可验证性和责任归属解释，不要只说“高风险”。"
+    },
+    {
+      "question": "什么证据会让你承认“先扩大代理权限”是错误方向？",
+      "hint": "给出具体阈值、用户行为、竞品信号或滥用事件，并说明会如何调整产品。"
+    }
+  ],
+  "writing_template": "我观察到：[用户行为或来源事实]。我判断核心问题是：[真实需求或战略约束]。关键证据是：[来源、指标、用户路径或竞品信号]。我的产品假设是：[如果做 X，用户/业务结果 Y 会因 Z 改变]。风险在于：[信任、成本、竞品、激励或安全]。下一步验证：[实验、指标、访谈或灰度方案]。",
+  "github_html_url": "https://github.com/leah-cinly/pm_thinking/blob/master/outputs/pm-thinking-coach/2026-09-28-weekly-thinking.html",
+  "github_json_url": "https://github.com/leah-cinly/pm_thinking/blob/master/outputs/pm-thinking-coach/2026-09-28-weekly-thinking.json",
+  "github_markdown_url": "https://github.com/leah-cinly/pm_thinking/blob/master/outputs/pm-thinking-coach/2026-09-28-weekly-notion.md"
+}
